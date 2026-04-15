@@ -53,7 +53,8 @@ def _set_up(allowed_apps_only: bool, linked_account_owner_id: str):
 # Instead of a single module-level instance, we define a helper to get a client
 # that correctly picks up the caller identity from the environment.
 def get_aci_client() -> ACI:
-    return ACI()
+    caller_auth = os.getenv("ACI_CALLER_AUTHORIZATION")
+    return ACI(caller_authorization=caller_auth)
 
 server: Server = Server("aci-mcp-unified")
 

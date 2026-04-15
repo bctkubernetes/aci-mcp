@@ -61,5 +61,8 @@ select = [
     "I", # isort
 ]
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [dependency-groups]
 dev = ["pyright>=1.1.396", "pytest>=8.3.5", "ruff>=0.11.0"]
