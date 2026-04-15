@@ -30,7 +30,9 @@ ALLOWED_APPS_ONLY = False
 LINKED_ACCOUNT_OWNER_ID = ""
 
 aci_search_functions = ACISearchFunctions.to_json_schema(FunctionDefinitionFormat.ANTHROPIC)
+aci_search_functions["name"] = "APPS_SEARCH_FUNCTIONS"
 aci_execute_function = ACIExecuteFunction.to_json_schema(FunctionDefinitionFormat.ANTHROPIC)
+aci_execute_function["name"] = "APPS_EXECUTE_FUNCTION"
 APPS_QUERY_DOCS_FUNCTION_NAME = "APPS_SEARCH_DOCS"
 
 # TODO: Cursor's auto mode doesn't work well with MCP. (generating wrong type of parameters and
@@ -118,7 +120,7 @@ async def handle_call_tool(
                 response = await client.get(
                     f"{ACI_SERVER_URL}/docs",
                     params={"q": query.strip()},
-                    headers={"X-API-KEY": ACI_API_KEY},
+                    headers={"X-API-KEY": APPS_API_KEY},
                 )
 
                 if response.status_code != 200:

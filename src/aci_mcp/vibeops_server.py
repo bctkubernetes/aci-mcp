@@ -47,7 +47,9 @@ const { data, error } = await supabase.auth.signInWithOAuth({
 """
 
 aci_search_functions = ACISearchFunctions.to_json_schema(FunctionDefinitionFormat.ANTHROPIC)
+aci_search_functions["name"] = "APPS_SEARCH_FUNCTIONS"
 aci_execute_function = ACIExecuteFunction.to_json_schema(FunctionDefinitionFormat.ANTHROPIC)
+aci_execute_function["name"] = "APPS_EXECUTE_FUNCTION"
 
 # TODO: Cursor's auto mode doesn't work well with MCP. (generating wrong type of parameters and
 # the type validation logic is not working correctly). So temporarily we're removing the limit and
