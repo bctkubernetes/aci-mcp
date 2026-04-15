@@ -31,7 +31,7 @@ LINKED_ACCOUNT_OWNER_ID = ""
 
 aci_search_functions = ACISearchFunctions.to_json_schema(FunctionDefinitionFormat.ANTHROPIC)
 aci_execute_function = ACIExecuteFunction.to_json_schema(FunctionDefinitionFormat.ANTHROPIC)
-ACI_QUERY_DOCS_FUNCTION_NAME = "ACI_SEARCH_DOCS"
+APPS_QUERY_DOCS_FUNCTION_NAME = "APPS_SEARCH_DOCS"
 
 # TODO: Cursor's auto mode doesn't work well with MCP. (generating wrong type of parameters and
 # the type validation logic is not working correctly). So temporarily we're removing the limit and
@@ -76,7 +76,7 @@ async def handle_list_tools() -> list[types.Tool]:
             inputSchema=aci_execute_function["input_schema"],
         ),
         types.Tool(
-            name=ACI_QUERY_DOCS_FUNCTION_NAME,
+            name=APPS_QUERY_DOCS_FUNCTION_NAME,
             description="Search for ACI.dev concepts, documentation,"
             " Python & TypeScript SDK documentation, and usage examples",
             inputSchema={
@@ -103,7 +103,7 @@ async def handle_call_tool(
     if not arguments:
         arguments = {}
 
-    if name == ACI_QUERY_DOCS_FUNCTION_NAME:
+    if name == APPS_QUERY_DOCS_FUNCTION_NAME:
         query = arguments.get("q", "")
         if not query or not isinstance(query, str) or not query.strip():
             return [
@@ -170,7 +170,7 @@ async def handle_call_tool(
                 )
             ]
 
-    # TODO: if it's ACI_SEARCH_FUNCTIONS, populate default values for limit and offset because we
+    # TODO: if it's APPS_SEARCH_FUNCTIONS, populate default values for limit and offset because we
     # removed them from the input schema at the top of this file.
     if name == aci_search_functions["name"]:
         arguments["limit"] = 15
@@ -178,15 +178,15 @@ async def handle_call_tool(
 
     # TODO: temporary solution to support multi-user usecases due to the limitation of MCP protocol.
     # What happens here is that we allow user (MCP clients) to pass in the
-    # "aci_override_linked_account_owner_id" parameter for the ACI_EXECUTE_FUNCTION tool call
+    # "apps_override_linked_account_owner_id" parameter for the APPS_EXECUTE_FUNCTION tool call
     # (apart from the "function_name" and "function_arguments" parameters), to override the
     # default value of the "linked_account_owner_id".
     # The --linked-account-owner-id flag that we use to start the MCP server will be used as the
     # default value of the "linked_account_owner_id".
     linked_account_owner_id = LINKED_ACCOUNT_OWNER_ID
-    if name == aci_execute_function["name"] and "aci_override_linked_account_owner_id" in arguments:
-        linked_account_owner_id = str(arguments["aci_override_linked_account_owner_id"])
-        del arguments["aci_override_linked_account_owner_id"]
+    if name == aci_execute_function["name"] and "apps_override_linked_account_owner_id" in arguments:
+        linked_account_owner_id = str(arguments["apps_override_linked_account_owner_id"])
+        del arguments["apps_override_linked_account_owner_id"]
 
     try:
         with get_aci_client() as aci_instance:
