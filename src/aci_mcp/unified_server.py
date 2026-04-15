@@ -18,10 +18,10 @@ logger = logging.getLogger(__name__)
 # TODO: We need the API key and server URL because we are using an endpoint in the aci.dev main
 # server to do vector search on docs. In a future version, we might want to move the endpoint to
 # the customer support bot server.
-ACI_API_KEY = os.getenv("ACI_API_KEY", "")
+ACI_API_KEY = os.getenv("APPS_API_KEY", "") or os.getenv("ACI_API_KEY", "")
 if not ACI_API_KEY:
     raise ValueError(
-        "ACI_API_KEY environment variable is not set. Please set it to your ACI API key."
+        "APPS_API_KEY environment variable is not set. Please set it to your Apps API key."
     )
 
 ACI_SERVER_URL = os.getenv("ACI_SERVER_URL", "https://api.aci.dev/v1")

@@ -22,5 +22,5 @@ def validate_api_key(api_key: str | None) -> None:
     # TODO: for now only validate that the api key is not the placeholder value because that's
     # most likely the case when the user copy over the example config from the documentation.
     # Technically we can also do a more solid regex but that might not be forward compatible.
-    if not api_key or api_key in ["<YOUR_ACI_API_KEY>", "ACI_API_KEY", "<ACI_API_KEY>"]:
+    if not api_key or api_key in ["<YOUR_APPS_API_KEY>", "APPS_API_KEY", "<APPS_API_KEY>", "<YOUR_ACI_API_KEY>", "ACI_API_KEY", "<ACI_API_KEY>"]:
         raise ValueError("Invalid API key")

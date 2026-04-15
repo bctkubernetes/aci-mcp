@@ -38,7 +38,7 @@ def start_apps_server(apps: str, linked_account_owner_id: str, transport: str, p
         raise click.UsageError("At least one app is required")
     from .apps_server import start
 
-    validators.validate_api_key(os.getenv("ACI_API_KEY"))
+    validators.validate_api_key(os.getenv("APPS_API_KEY") or os.getenv("ACI_API_KEY"))
 
     return start(apps_list, linked_account_owner_id, transport, port)
 
@@ -48,7 +48,7 @@ def start_apps_server(apps: str, linked_account_owner_id: str, transport: str, p
     "--allowed-apps-only",
     is_flag=True,
     default=False,
-    help="Limit the functions (tools) search to only the allowed apps that are accessible to this agent. (identified by ACI_API_KEY)",
+    help="Limit the functions (tools) search to only the allowed apps that are accessible to this agent. (identified by APPS_API_KEY)",
 )
 @click.option(
     "--linked-account-owner-id",
@@ -69,7 +69,7 @@ def start_unified_server(
     """Start the unified MCP server with unlimited tool access."""
     from .unified_server import start
 
-    validators.validate_api_key(os.getenv("ACI_API_KEY"))
+    validators.validate_api_key(os.getenv("APPS_API_KEY") or os.getenv("ACI_API_KEY"))
 
     return start(allowed_apps_only, linked_account_owner_id, transport, port)
 
