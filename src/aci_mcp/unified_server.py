@@ -50,7 +50,11 @@ def _set_up(allowed_apps_only: bool, linked_account_owner_id: str):
     LINKED_ACCOUNT_OWNER_ID = linked_account_owner_id
 
 
-aci = ACI()
+# Instead of a single module-level instance, we define a helper to get a client
+# that correctly picks up the caller identity from the environment.
+def get_aci_client() -> ACI:
+    return ACI()
+
 server: Server = Server("aci-mcp-unified")
 
 
@@ -184,13 +188,14 @@ async def handle_call_tool(
         del arguments["aci_override_linked_account_owner_id"]
 
     try:
-        result = aci.handle_function_call(
-            name,
-            arguments,
-            linked_account_owner_id=linked_account_owner_id,
-            allowed_apps_only=ALLOWED_APPS_ONLY,
-            format=FunctionDefinitionFormat.ANTHROPIC,
-        )
+        with get_aci_client() as aci_instance:
+            result = aci_instance.handle_function_call(
+                name,
+                arguments,
+                linked_account_owner_id=linked_account_owner_id,
+                allowed_apps_only=ALLOWED_APPS_ONLY,
+                format=FunctionDefinitionFormat.ANTHROPIC,
+            )
         return [
             types.TextContent(
                 type="text",

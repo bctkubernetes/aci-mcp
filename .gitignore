@@ -11,3 +11,6 @@ wheels/
 .env
 
 .vscode/
+
+.claude/
+.DS_Store
