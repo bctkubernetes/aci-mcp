@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 # TODO: We need the API key and server URL because we are using an endpoint in the aci.dev main
 # server to do vector search on docs. In a future version, we might want to move the endpoint to
 # the customer support bot server.
-ACI_API_KEY = os.getenv("APPS_API_KEY", "") or os.getenv("ACI_API_KEY", "")
-if not ACI_API_KEY:
+APPS_API_KEY = os.getenv("APPS_API_KEY", "") or os.getenv("ACI_API_KEY", "")
+if not APPS_API_KEY:
     raise ValueError(
         "APPS_API_KEY environment variable is not set. Please set it to your Apps API key."
     )
@@ -53,8 +53,8 @@ def _set_up(allowed_apps_only: bool, linked_account_owner_id: str):
 # Instead of a single module-level instance, we define a helper to get a client
 # that correctly picks up the caller identity from the environment.
 def get_aci_client() -> ACI:
-    caller_auth = os.getenv("ACI_CALLER_AUTHORIZATION")
-    return ACI(caller_authorization=caller_auth)
+    caller_auth = os.getenv("APPS_CALLER_AUTHORIZATION")
+    return ACI(api_key=APPS_API_KEY, caller_authorization=caller_auth)
 
 server: Server = Server("aci-mcp-unified")
 
